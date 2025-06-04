@@ -22,10 +22,11 @@ services:
 
   # Regular Playwright MCP (optional - for comparison)
   playwright-mcp:
-    image: mcr.microsoft.com/playwright/mcp:latest
+    image: mcr.microsoft.com/playwright:latest
+    working_dir: /app
     expose:
       - "3333"
-    command: ["npx", "@playwright/mcp@latest", "--port", "3333", "--host", "0.0.0.0"]
+    command: ["sh", "-c", "npm install -g @playwright/mcp && npx @playwright/mcp --port 3333 --host 0.0.0.0"]
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.playwright.rule=Host(`playwright.localhost`)"
