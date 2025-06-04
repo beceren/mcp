@@ -1,0 +1,52 @@
+services:
+  traefik:
+    image: traefik:v3.4.1
+    container_name: traefik
+    command: --configFile=/etc/traefik/traefik.yaml
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/traefik.yaml:/etc/traefik/traefik.yaml
+      - ./traefik/dynamic.yaml:/etc/traefik/dynamic.yaml
+      - ./traefik/certs:/etc/traefik/certs:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.middlewares=secure-headers@file"
+
+  # Regular Playwright MCP (optional - for comparison)
+  playwright-mcp:
+    image: mcr.microsoft.com/playwright/mcp:latest
+    expose:
+      - "3333"
+    command: ["npx", "@playwright/mcp@latest", "--port", "3333", "--host", "0.0.0.0"]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.playwright.rule=Host(`playwright.localhost`)"
+      - "traefik.http.routers.playwright.entrypoints=websecure"
+      - "traefik.http.routers.playwright.tls=true"
+      - "traefik.http.routers.playwright.middlewares=secure-headers@file"
+      - "traefik.http.services.playwright.loadbalancer.server.port=3333"
+
+  # Rebrowser Playwright MCP (stealth version)
+  rebrowser-mcp:
+    build: ./ms-rebrowser-mcp
+    expose:
+      - "3333"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rebrowser.rule=Host(`rebrowser.localhost`)"
+      - "traefik.http.routers.rebrowser.entrypoints=websecure"
+      - "traefik.http.routers.rebrowser.tls=true"
+      - "traefik.http.routers.rebrowser.middlewares=secure-headers@file"
+      - "traefik.http.services.rebrowser.loadbalancer.server.port=3333"
+
+networks:
+  default:
+    name: mcp-network

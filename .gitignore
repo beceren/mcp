@@ -1,0 +1,23 @@
+# SSL Certificates (generated locally)
+traefik/certs/
+
+# Docker volumes
+.docker/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment files
+.env
+.env.local
+.env.*.local

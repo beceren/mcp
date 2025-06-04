@@ -1,0 +1,39 @@
+api:
+  dashboard: true
+  insecure: true  # For local dev only
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+
+  websecure:
+    address: ":443"
+    http:
+      tls:
+        options: default
+
+providers:
+  docker:
+    exposedByDefault: false
+    network: mcp-network
+
+  file:
+    filename: /etc/traefik/dynamic.yaml
+    watch: true
+
+tls:
+  options:
+    default:
+      minVersion: "VersionTLS13"
+
+  certificates:
+    - certFile: /etc/traefik/certs/localhost-cert.pem
+      keyFile: /etc/traefik/certs/localhost-key.pem
+
+log:
+  level: INFO
