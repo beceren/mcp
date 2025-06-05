@@ -31,4 +31,4 @@ ENV REBROWSER_PATCHES_RUNTIME_FIX_MODE=alwaysIsolated
 ENV REBROWSER_PATCHES_SOURCE_URL=jquery.min.js
 
 # Start the server with proper stealth configuration
-CMD ["node", "cli.js", "--port", "3333", "--host", "0.0.0.0", "--browser", "chromium", "--no-sandbox"]
+CMD ["node", "cli.js", "--port", "3333", "--host", "0.0.0.0", "--no-sandbox"]
