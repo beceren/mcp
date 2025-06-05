@@ -26,6 +26,8 @@ services:
     working_dir: /app
     ports:
       - "3333:3333"
+    volumes:
+      - playwright-browsers:/ms-playwright
     command: ["sh", "-c", "npm install -g @playwright/mcp && npx playwright install chromium && npx @playwright/mcp --port 3333 --host 0.0.0.0 --browser chromium --no-sandbox --isolated"]
     labels:
       - "traefik.enable=true"
@@ -40,6 +42,8 @@ services:
     build: ./ms-rebrowser-mcp
     ports:
       - "3334:3333"
+    volumes:
+      - rebrowser-browsers:/ms-playwright
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.rebrowser.rule=Host(`rebrowser.localhost`)"
@@ -47,6 +51,10 @@ services:
       - "traefik.http.routers.rebrowser.tls=true"
       - "traefik.http.routers.rebrowser.middlewares=secure-headers@file"
       - "traefik.http.services.rebrowser.loadbalancer.server.port=3333"
+
+volumes:
+  playwright-browsers:
+  rebrowser-browsers:
 
 networks:
   default:

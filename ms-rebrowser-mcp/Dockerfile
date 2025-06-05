@@ -21,6 +21,9 @@ RUN npm install
 # Build the project
 RUN npm run build
 
+# Pre-install Chromium to avoid installation on each restart (Chrome not available on ARM64)
+RUN npx playwright install chromium
+
 EXPOSE 3333
 
 # Set rebrowser-patches environment variables for stealth mode
@@ -28,4 +31,4 @@ ENV REBROWSER_PATCHES_RUNTIME_FIX_MODE=alwaysIsolated
 ENV REBROWSER_PATCHES_SOURCE_URL=jquery.min.js
 
 # Start the server with proper stealth configuration
-CMD ["node", "cli.js", "--port", "3333", "--host", "0.0.0.0", "--no-sandbox"]
+CMD ["node", "cli.js", "--port", "3333", "--host", "0.0.0.0", "--browser", "chromium", "--no-sandbox"]
