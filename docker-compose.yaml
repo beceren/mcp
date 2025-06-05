@@ -26,7 +26,7 @@ services:
     working_dir: /app
     ports:
       - "3333:3333"
-    command: ["sh", "-c", "npm install -g @playwright/mcp && npx @playwright/mcp --port 3333 --host 0.0.0.0"]
+    command: ["sh", "-c", "npm install -g @playwright/mcp && npx playwright install chromium && npx @playwright/mcp --port 3333 --host 0.0.0.0 --browser chromium --no-sandbox --isolated"]
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.playwright.rule=Host(`playwright.localhost`)"
